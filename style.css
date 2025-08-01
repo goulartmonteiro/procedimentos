@@ -1,0 +1,263 @@
+/*
+ * Arquivo: styles.css
+ * Descrição: Estilos personalizados para a página de busca de tabela Excel.
+ */
+
+/* --- Estilos Gerais --- */
+
+
+.nenhum-arquivo {
+    background-color: #ff0000;
+    font-size: 15px;
+    color: #ffffff;        
+    padding: 10px;           
+    border-radius: 5px;      
+    display: inline-block;  
+}
+.carregando-arquivo {
+    background-color: #FFA500;
+    font-size: 15px;
+    color: #ffffff;        
+    padding: 10px;           
+    border-radius: 5px;      
+    display: inline-block;  
+}
+.arquivo-carregado {
+    background-color: #00FF00;
+    font-size: 15px;
+    color: #ffffff;        
+    padding: 10px;           
+    border-radius: 5px;      
+    display: inline-block;  
+}
+
+.libre-baskerville-regular {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.libre-baskerville-bold {
+  font-family:
+  font-weight: 700;
+  font-style: normal;
+}
+
+.libre-baskerville-regular-italic {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+body {
+    font-family:  "Libre Baskerville", serif; /* Fonte mais moderna */
+    margin: 20px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333; /* Cor de texto padrão */
+    background-color: #91a8d0; /* Fundo mais suave */
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #000000; /* Azul mais escuro para o título principal */
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff; /* Linha inferior decorativa */
+}
+
+h2 {
+    font-size: 22px;
+    margin-top: 35px;
+    margin-bottom: 18px;
+    color: #4a4a4a;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+hr { 
+    margin: 30px 0; 
+    border: 0;
+    border-top: 1px dashed #cccccc; /* Linha pontilhada suave */
+}
+
+/* --- Status de Carregamento --- */
+.loading-status {
+    font-size: 1.1em;
+    color: #007bff; /* Azul para status padrão */
+    margin-bottom: 20px;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    background-color: #eaf5ff;
+}
+
+.loading-status.error {
+    color: #dc3545; /* Vermelho para erro */
+    border-color: #dc3545;
+    background-color: #ffeaea;
+}
+
+.loading-status.success { /* Nova classe para sucesso */
+    color: #28a745; /* Verde para sucesso */
+    border-color: #28a745;
+    background-color: #e6ffe6;
+}
+
+/* --- Área de Busca e Resultados --- */
+.search-area {
+    border: 1px solid #cceeff; /* Borda mais suave e azulada */
+    padding: 25px;
+    margin-top: 30px;
+    border-radius: 10px; /* Cantos mais arredondados */
+    background-color: #ffffff; /* Fundo branco para destaque */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Sutil sombra */
+}
+
+.search-area h3 {
+    margin-top: 0;
+    color: #007bff;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.search-area div { 
+    margin-bottom: 15px; /* Mais espaço entre os campos */
+    display: flex;
+    align-items: center;
+}
+
+.search-area label {
+    min-width: 190px; /* Alinha os labels */
+    margin-right: 15px;
+    font-weight: 600; /* Um pouco mais encorpado */
+    color: #555;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 10px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #007bff; /* Borda azul ao focar */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Sombra suave ao focar */
+    outline: none; /* Remove a borda padrão do navegador */
+}
+
+input[type="text"][readonly] {
+    background-color: #e9ecef; /* Fundo para campos somente leitura */
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* --- Botões --- */
+button { 
+    padding: 12px 22px; 
+    margin-right: 15px;
+    margin-top: 25px; /* Mais espaço acima dos botões */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px); /* Efeito de "levantar" ao passar o mouse */
+}
+
+button#btn-buscar {
+    background-color: #007bff; /* Azul primário */
+    color: white;
+}
+
+button#btn-buscar:hover:not(:disabled) {
+    background-color: #0056b3; /* Azul mais escuro no hover */
+}
+
+button#btn-buscar:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+button#btn-limpar {
+    background-color: #6c757d; /* Cinza para limpar */
+    color: white;
+}
+
+button#btn-limpar:hover:not(:disabled) {
+    background-color: #5a6268; /* Cinza mais escuro no hover */
+}
+
+/* --- Link para Baixar o Arquivo (se estiver usando upload manual) --- */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para o grupo de input de arquivo (se estiver usando upload manual) */
+.file-input-group { 
+    margin-top: 20px;
+    font-size: 15px;
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px dashed #aaddff; /* Borda tracejada suave */
+    border-radius: 8px;
+    background-color: #f7fcff;
+    text-align: center;
+}
+.file-input-group label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
+}
+.file-input-group input[type="file"] {
+    display: block; /* Garante que o input de arquivo ocupa sua própria linha */
+    margin: 10px auto; /* Centraliza */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+#btn-carregar-tabela {
+    background-color: #28a745; /* Verde para carregar */
+    color: white;
+    margin-top: 15px;
+}
+#btn-carregar-tabela:hover:not(:disabled) {
+    background-color: #218838;
+}
+#btn-carregar-tabela:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+#status-excel {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
