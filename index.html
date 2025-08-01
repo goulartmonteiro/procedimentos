@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Busca em Tabela da Rede Contratada</title>
+    <title>Busca em Tabela da Rede Contratada </title>
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script> 
     <style>
         body { 
@@ -75,6 +75,7 @@
         button#btn-buscar {
             background-color: #008CBA; /* Azul */
             color: white;
+            padding: 10px 18px;
             margin-top: 20px;
             margin-bottom: 10px;
         }
@@ -85,6 +86,7 @@
         button#btn-limpar {
             background-color: #f44336; /* Vermelho */
             color: white;
+            padding: 10px 18px;
             margin-top: 20px;
         }
         hr { 
@@ -99,9 +101,9 @@
     <h1>Busca em Tabela da Rede Contratada</h1>
 
     <h2>1. Status do Carregamento da Tabela</h2>
-    <div id="loading-status" class="loading-status">Carregando tabela da rede contratada do servidor...</div>
+    <div id="loading-status" class="loading-status">Carregando tabela do servidor...</div>
 
-    <hr>
+    ---
 
     <h2>2. Realizar Busca</h2>
     <p>Digite o Código e/ou Descrição para buscar informações na tabela.</p>
@@ -149,7 +151,8 @@
 
     <script>
         let dadosTabela = null; // Armazenará os dados da tabela
-        const EXCEL_URL = 'https://gestordeconteudo.ipsemg.mg.gov.br/publico/img/upload/files/Sa%C3%BAde/Tabelas%20e%20Manual%20de%20Normas/Tabela%20da%20Rede%20Contratada%20-%20Atualiza%C3%A7%C3%A3o%2023.04.2025.xlsx';
+        // *** IMPORTANTE: AJUSTE ESTA URL SE O ARQUIVO NÃO ESTIVER NA MESMA PASTA ***
+        const EXCEL_URL = 'Tabela.xlsx'; 
 
         // Elementos da interface
         const loadingStatusDiv = document.getElementById('loading-status');
@@ -176,52 +179,46 @@
 
         // --- Funções Auxiliares ---
 
-        // Função para normalizar strings para busca (remove espaços, transforma em minúsculas)
         function normalizarStringBusca(str) {
             return String(str || '').replace(/\s/g, '').trim().toLowerCase();
         }
         
-        // Função para obter valor da célula, ou string vazia se undefined/null
         function getCellValue(row, index) {
             return String(row[index] || '');
         }
 
-        // --- Carregamento do Arquivo Excel da Web ---
+        // --- Carregamento do Arquivo Excel (do Mesmo Hoster) ---
 
-        async function carregarTabelaDaWeb() {
-            loadingStatusDiv.textContent = 'Carregando tabela da rede contratada do servidor...';
+        async function carregarTabelaDoHoster() {
+            loadingStatusDiv.textContent = 'Carregando tabela do servidor...';
             loadingStatusDiv.classList.remove('error');
-            btnBuscar.disabled = true; // Desabilita o botão de busca enquanto carrega
+            btnBuscar.disabled = true; 
 
             try {
-                const response = await fetch(EXCEL_URL, { 
-                    mode: 'cors', 
-                    cache: 'no-cache' 
-                });
+                // Requisição fetch para o arquivo local no hoster
+                const response = await fetch(EXCEL_URL);
                 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}. Detalhes: ${errorText.substring(0, 100)}...`);
+                    throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}. Verifique se o arquivo "${EXCEL_URL}" está na pasta correta.`);
                 }
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
                 const workbook = XLSX.read(data, { type: 'array' });
 
                 const primeiraPlanilha = workbook.SheetNames[0];
-                // header: 1 garante que cada linha é um array de valores
                 dadosTabela = XLSX.utils.sheet_to_json(workbook.Sheets[primeiraPlanilha], { header: 1 });
                 
                 loadingStatusDiv.textContent = `Tabela carregada com sucesso! (${dadosTabela.length -1} registros).`;
-                loadingStatusDiv.style.color = '#28a745'; // Verde para sucesso
-                btnBuscar.disabled = false; // Habilita o botão de busca após o carregamento
+                loadingStatusDiv.style.color = '#28a745'; 
+                btnBuscar.disabled = false; 
                 console.log(`Tabela "${EXCEL_URL}" carregada. ${dadosTabela.length} linhas (incluindo cabeçalho).`);
 
             } catch (error) {
                 console.error("Erro ao carregar ou processar a tabela do Excel:", error);
-                loadingStatusDiv.textContent = `Erro ao carregar a tabela: ${error.message}. Verifique o console.`;
-                loadingStatusDiv.classList.add('error'); // Adiciona classe para estilização de erro
-                btnBuscar.disabled = true; // Mantém o botão de busca desabilitado em caso de erro
-                alert(`Não foi possível carregar a tabela do Excel: ${error.message}. Verifique a URL ou sua conexão.`);
+                loadingStatusDiv.textContent = `Erro ao carregar a tabela: ${error.message}. Verifique se o arquivo está no local correto no hoster.`;
+                loadingStatusDiv.classList.add('error'); 
+                btnBuscar.disabled = true; 
+                alert(`Não foi possível carregar a tabela do Excel: ${error.message}. Verifique o console e o caminho do arquivo.`);
             }
         }
 
@@ -241,16 +238,12 @@
             // Inicia do índice 1 para pular o cabeçalho
             for (let i = 1; i < dadosTabela.length; i++) {
                 const row = dadosTabela[i];
-                // Garantir que a célula exista antes de tentar acessá-la
                 const codigoNaLinha = normalizarStringBusca(getCellValue(row, COL_IDX.CODIGO_PROCEDIMENTO));
                 const descricaoNaLinha = normalizarStringBusca(getCellValue(row, COL_IDX.DESCRICAO));
 
-                // A busca pode ser por código EXATO ou descrição que INCLUA o termo
                 const codigoMatch = (codigoNormalizadoBusca === '') || (codigoNaLinha === codigoNormalizadoBusca);
-                // Usamos includes para descrição, permitindo busca parcial
                 const descricaoMatch = (descricaoNormalizadaBusca === '' || descricaoNaLinha.includes(descricaoNormalizadaBusca));
 
-                // Se ambos os termos de busca estiverem vazios, não há critério, então não há match válido
                 if (termoCodigo === '' && termoDescricao === '') {
                     continue; 
                 }
@@ -304,7 +297,7 @@
             const termoCodigo = codigoInput.value;
             const termoDescricao = descricaoInput.value;
 
-            limparCamposOutput(); // Limpa resultados anteriores
+            limparCamposOutput(); 
 
             if (termoCodigo === '' && termoDescricao === '') {
                 alert('Por favor, digite um Código ou Descrição para realizar a busca.');
@@ -343,7 +336,7 @@
         });
 
         // --- Carregar a tabela automaticamente ao carregar a página ---
-        document.addEventListener('DOMContentLoaded', carregarTabelaDaWeb);
+        document.addEventListener('DOMContentLoaded', carregarTabelaDoHoster);
 
         // Estado inicial do botão
         btnBuscar.disabled = true;
